@@ -1,2 +1,2 @@
-include ':lesson4', ':Lesson5', ':Lesson6'
+include ':lesson4', ':Lesson5', ':Lesson6', ':Lesson7'
 include 'Lesson1', 'Lesson2', 'Core', 'homework1', 'Lesson3'
