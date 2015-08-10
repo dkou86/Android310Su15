@@ -14,8 +14,6 @@ repositories {
     jcenter()
 }
 
-
-
 apply plugin: 'com.android.application'
 
 android {
