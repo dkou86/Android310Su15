@@ -1,23 +1,39 @@
-package com.uw.android310.lesson8;
+package com.uw.android310.lesson8.activity;
 
-import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
+import com.uw.android310.lesson8.R;
+import com.uw.android310.lesson8.model.Image;
+import com.uw.android310.lesson8.service.ImageService;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class MainActivity extends AppCompatActivity {
+    public static final String TAG = MainActivity.class.getSimpleName();
+
+    @Bind(R.id.results) TextView mResultTextView;
+    @Bind(R.id.imageview) ImageView mResultImageView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // TODO: Update layout to display image and metadata
+        ButterKnife.bind(this);
 
         handleIntent(getIntent());
     }
@@ -32,9 +48,8 @@ public class MainActivity extends AppCompatActivity {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
 
-            // TODO: Get image data from Imgur
-
-            // TODO: Use Picasso to load image, show "No image with specified id: xxx" if it does not exist.
+            // Get image data from Imgur
+            new ImageService(this).execute(query, new UiCallback());
 
             // TODO: Enable deep linking to images
         }
@@ -54,5 +69,30 @@ public class MainActivity extends AppCompatActivity {
         searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
 
         return true;
+    }
+
+    private class UiCallback implements Callback<Image> {
+
+        @Override
+        public void success(Image imageResponse, Response response) {
+            // Load image
+            Picasso.with(getApplicationContext())
+                    .load(imageResponse.data.link)
+                    .fit()
+                    .into(mResultImageView);
+
+            // Reset results
+            mResultTextView.setText(null);
+        }
+
+        @Override
+        public void failure(RetrofitError error) {
+            //Assume we have no connection, since error is null
+            if (error == null) {
+                Log.e(TAG, "No internet connection.");
+            } else {
+                mResultTextView.setText("No image with specified ID");
+            }
+        }
     }
 }
