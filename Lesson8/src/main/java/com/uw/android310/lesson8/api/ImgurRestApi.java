@@ -13,7 +13,7 @@ public interface ImgurRestApi {
     static final String server = "https://api.imgur.com";
 
     /**
-     * Get an image from imgur.
+     * Get an image from imgur. Asynchronous
      *
      * @param id Image ID
      */
@@ -22,4 +22,14 @@ public interface ImgurRestApi {
             @Header("Authorization") String auth,
             @Path("id") String id,
             Callback<Image> callback);
+
+    /**
+     * Get an image from imgur. Synchronous
+     *
+     * @param id Image ID
+     */
+    @GET("/3/image/{id}")
+    Image getImage(
+            @Header("Authorization") String auth,
+            @Path("id") String id);
 }

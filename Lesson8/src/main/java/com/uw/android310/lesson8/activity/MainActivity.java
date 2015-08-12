@@ -3,6 +3,7 @@ package com.uw.android310.lesson8.activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -52,6 +53,9 @@ public class MainActivity extends AppCompatActivity {
             new ImageService(this).execute(query, new UiCallback());
 
             // TODO: Enable deep linking to images
+        } else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+            Uri data = intent.getData();
+            Log.d(TAG, data.getPath());
         }
     }
 
