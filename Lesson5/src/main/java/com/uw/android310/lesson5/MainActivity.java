@@ -2,14 +2,11 @@ package com.uw.android310.lesson5;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-<<<<<<< HEAD
-=======
 import android.util.Log;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
->>>>>>> lab_5-2_retrofit_solution
 
 
 public class MainActivity extends AppCompatActivity {
