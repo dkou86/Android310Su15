@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 
 import com.uw.android310.lesson9.api.GithubRestApi;
 import com.uw.android310.lesson9.model.Contributor;
+import com.uw.android310.lesson9.model.Repository;
 import com.uw.android310.lesson9.util.Constants;
 
 import java.lang.ref.WeakReference;
@@ -26,7 +27,7 @@ public class GithubService {
         this.mContext = new WeakReference<>(context);
     }
 
-    public void execute(@NonNull final String owner, @NonNull final String repo,
+    public void executeContributors(@NonNull final String owner, @NonNull final String repo,
                          final Callback<List<Contributor>> callback) {
         RestAdapter restAdapter = buildRestAdapter();
 
@@ -48,11 +49,18 @@ public class GithubService {
                 });
     }
 
-    public Observable<List<Contributor>> execute(@NonNull final String owner, @NonNull final String repo) {
+    public Observable<List<Contributor>> executeContributors(@NonNull final String owner, @NonNull final String repo) {
         RestAdapter restAdapter = buildRestAdapter();
 
         return restAdapter.create(GithubRestApi.class).contributors(
                 Constants.USER_AGENT, owner, repo);
+    }
+
+    public Observable<List<Repository>> executeStarred(@NonNull final String user) {
+        RestAdapter restAdapter = buildRestAdapter();
+
+        return restAdapter.create(GithubRestApi.class).starred(
+                Constants.USER_AGENT, user);
     }
 
     private RestAdapter buildRestAdapter() {

@@ -2,6 +2,7 @@ package com.uw.android310.lesson9.api;
 
 
 import com.uw.android310.lesson9.model.Contributor;
+import com.uw.android310.lesson9.model.Repository;
 
 import java.util.List;
 
@@ -39,4 +40,14 @@ public interface GithubRestApi {
             @Header("User-Agent") String userAgent,
             @Path("owner") String owner,
             @Path("repo") String repo);
+
+    /**
+     * Get a list of repositories starred by a user
+     *
+     * @param user Github user
+     */
+    @GET("/users/{user}/starred")
+    Observable<List<Repository>> starred(
+            @Header("User-Agent") String userAgent,
+            @Path("owner") String user);
 }

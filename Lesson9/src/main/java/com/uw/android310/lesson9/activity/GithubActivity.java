@@ -8,6 +8,7 @@ import android.view.MenuItem;
 
 import com.uw.android310.lesson9.R;
 import com.uw.android310.lesson9.model.Contributor;
+import com.uw.android310.lesson9.model.Repository;
 import com.uw.android310.lesson9.service.GithubService;
 
 import java.util.List;
@@ -28,9 +29,18 @@ public class GithubActivity extends AppCompatActivity {
 
 //        new GithubService(this).execute("netflix", "rxjava", new UiCallback());
 
-        new GithubService(this).execute("netflix", "rxjava")
+        GithubService githubService = new GithubService(this);
+
+        githubService.executeContributors("netflix", "rxjava")
                 .lift(GithubActivity.<Contributor>flattenList())
-                .forEach(c -> Log.d(TAG, "Login: " + c.login));
+                .flatMap(c -> githubService.executeStarred(c.login))
+                .lift(GithubActivity.<Repository>flattenList())
+                .groupBy(r -> r.full_name)
+                .flatMap(g -> g.count().map(c -> c + "\t" + g.getKey()))
+                .toSortedList((a, b) -> b.compareTo(a))
+                .lift(GithubActivity.flattenList())
+                .take(8)
+                .forEach(sortedRepos -> Log.d(TAG, "Sorted repositories:" + sortedRepos));
     }
 
     @Override
